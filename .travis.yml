@@ -1,0 +1,32 @@
+sudo: required
+servies:
+  - docker
+
+before_install:
+  - docker build -t scurrent/react-test -f ./client/Dockerfile.dev ./client
+  # look into the client directory to get the test context
+
+
+script:
+#if any exit with code other than 0 - travis will assume it failed.
+# use the image we just created to run the tests
+  - docker run scurrent/react-test npm test -- --watchAll=false
+
+after_success:
+  - docker build -t scurrent/multi-client ./client   # no neet to specify dockerfile, it can use the default Dockerfile
+  - docker build -t scurrent/multi-nginx ./nginx
+  - docker build -t scurrent/multi-server ./server
+  - docker build -t scurrent/multi-worker ./worker
+
+#now want to push them off to DockerHub
+
+#log into the Docker CLI
+# saved these values in travis ci as environment vars
+  - echo "$DOCKER_PASS" | docker login -u "$DOCKER_ID" --password-stdin
+
+  #gets the password, and added in to standard in (after the pipe)
+  - docker push scurrent/multi-client
+  - docker push scurrent/multi-nginx
+  - docker push scurrent/multi-server
+  - docker push scurrent/multi-worker
+
