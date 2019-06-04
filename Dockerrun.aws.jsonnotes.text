@@ -1,0 +1,6 @@
+
+
+//if a container is marked as "essential" all the other containers will be shut down as well.
+// at least one must be marked as essential - in this case nginx - because without it nothing works
+//"hostname comes from
+//hostname is not required
