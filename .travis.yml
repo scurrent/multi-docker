@@ -10,7 +10,10 @@ before_install:
 script:
 #if any exit with code other than 0 - travis will assume it failed.
 # use the image we just created to run the tests
-  - docker run scurrent/react-test npm test -- --watchAll=false
+
+#  - docker run scurrent/react-test npm test -- --watchAll=false
+
+  - docker run scurrent/react-test npm run test-coverage
 
 after_success:
   - docker build -t scurrent/multi-client ./client   # no neet to specify dockerfile, it can use the default Dockerfile
